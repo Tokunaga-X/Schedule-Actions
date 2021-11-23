@@ -1,2 +1,2 @@
-# Schedule-Actions
-Things I want to do on schedule use github-action.
+# Github Actions定时任务
+1. 请求Api 完成签到（新界）

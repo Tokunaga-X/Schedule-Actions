@@ -6,9 +6,20 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      - name: show enviroment
-        run: env | grep ^GITHUB
-      - name: show ref
-        run: echo "vesion from $Github_REF"
+      - name: print something
+        run: env | pwd
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ssh & make code run
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.TG_HOST }}
+          username: ${{ secrets.TG_USER }}
+          password: ${{ secrets.TG_PASS }}
+          script: |
+            echo 'github action happened'
+            
+          

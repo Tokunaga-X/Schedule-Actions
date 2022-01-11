@@ -3,7 +3,7 @@ var axios = require('axios');
 var FormData = require('form-data');
 
 var data = new FormData();
-data.append('email', 'caijinqi1314@gmail.com');
+data.append('email', '1419991347@qq.com');
 data.append('passwd', 'caijinqi');
 
 const loginConfig = {

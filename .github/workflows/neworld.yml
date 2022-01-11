@@ -1,4 +1,4 @@
-name: Neworld Sign in
+name: Neworld Sign
 
 on:
   workflow_dispatch:
@@ -8,9 +8,10 @@ jobs:
   ssm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
       
-      - name: ssh & make code run
+      - name: ssm to aws
         uses: peterkimzz/aws-ssm-send-command@master
         id: ssm
         with:

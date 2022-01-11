@@ -16,7 +16,7 @@ jobs:
       - name: ssh & make code run
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.TG_HOST }}
+          host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: 22

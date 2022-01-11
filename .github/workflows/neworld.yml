@@ -5,19 +5,17 @@ on:
     
 
 jobs:
-  test:
+  ssm:
     runs-on: ubuntu-latest
     steps:
-      - name: print something
-        run: env | pwd
-  build:
-    runs-on: ubuntu-latest
-    steps:
+      - uses: actions/checkout@v2
+      
       - name: ssh & make code run
         uses: peterkimzz/aws-ssm-send-command@master
         id: ssm
         with:
-          aws-access-key-id: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           instance-ids: ${{ secrets.INSTANCE_ID }}
 

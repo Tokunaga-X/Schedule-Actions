@@ -14,13 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ssh & make code run
-        uses: appleboy/ssh-action@master
+        uses: peterkimzz/aws-ssm-send-command@master
+        id: ssm
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: 22
-          script: |
-            echo 'github action happened'
+          aws-region: ap-east-1b
+          aws-access-key-id: AKIA2JYANUWQMD7E36KX
+          aws-secret-access-key: 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
+          instance-ids: i-0dbe746bc4326295c
+
+          working-directory: /home/ubuntu/code
+          command: ls -al
             
           

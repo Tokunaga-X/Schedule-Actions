@@ -4,7 +4,7 @@ const schedule = require('node-schedule');
 
 const config =  require('./config')
 
-const real_job = async (account) => {
+const real_job = (account) => {
   console.log(account._streams[1] + '开始签到')
 
   let custom_loginConfig = {
@@ -16,7 +16,7 @@ const real_job = async (account) => {
     ...account.getHeaders()
   }
 
-  await axios(custom_loginConfig)
+  axios(custom_loginConfig)
     .then(function (response) {
 
       // console.log('登录结果:', JSON.stringify(response.data));
@@ -34,11 +34,11 @@ const real_job = async (account) => {
     })
 }
 
-const  startSchedule = async ()=>{
+const  startSchedule = ()=>{
   schedule.scheduleJob('0 0 5 * * *',()=>{
       console.log('start job');
-      await real_job(config.old_account)
-      await real_job(config.new_account)
+      real_job(config.old_account)
+      real_job(config.new_account)
   }); 
 }
 

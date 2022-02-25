@@ -1,51 +1,45 @@
 
-var axios = require('axios');
-var FormData = require('form-data');
+const axios = require('axios');
+const schedule = require('node-schedule');
 
-var data = new FormData();
-data.append('email', '1419991347@qq.com');
-data.append('passwd', 'caijinqi');
+const config =  require('./config')
 
-const loginConfig = {
-  method: 'post',
-  url: 'https://neworld.tv/auth/login',
-  headers: { 
-    'accept': 'application/json, text/javascript', 
-    'content-type': 'application/x-www-form-urlencoded', 
-    'accept-encoding': 'gzip, deflate, br', 
-    'referer': 'https://neworld.tv/auth/login', 
-    'origin': 'https://neworld.tv', 
-    'Cookie': 'email=caijinqi1314%40gmail.com; expire_in=1641727668; ip=320c3272c417747cdc2a6a41b8d9b454; key=98ac6e444611469932af8c22dcb7d61b651487d8b8e88; uid=57570', 
-    ...data.getHeaders()
-  },
-  data : data
-};
+const real_job = async (account) => {
+  console.log(account._streams[1] + '开始签到')
 
-const signConfig = {
-    method: 'post',
-    url: 'https://neworld.tv/user/checkin',
-    headers: { 
-      'accept': 'application/json, text/javascript, */*; q=0.01', 
-      'cookie': 'email=caijinqi1314%40gmail.com; expire_in=1641920288; ip=9eb0daf876ddffd3e30b88b9171bfe17; key=29b8f329dcdaf8cf282b67b4c7fac95a7a5b48f002e07; uid=57570; email=caijinqi1314%40gmail.com; expire_in=1641920224; ip=19fa155fdcd0cbe44b9dc7e2267d1d0c; key=2175920c63487776c74a4163435356d52c5a8e36007a7; uid=57570', 
-      'Referer': 'https://neworld.tv/user', 
-      'Referrer-Policy': 'strict-origin-when-cross-origin'
-    }
-  };
+  let custom_loginConfig = {
+    ...config.loginConfig,
+    data: account
+  }
+  custom_loginConfig.headers = {
+    ...custom_loginConfig.headers,
+    ...account.getHeaders()
+  }
 
-const OLD_COOKIE = 'email=caijinqi1314%40gmail.com;uid=57570'
+  await axios(custom_loginConfig)
+    .then(function (response) {
 
-axios(loginConfig)
-.then(function (response) {
-  console.log('data:', JSON.stringify(response.data));
-  return response.headers["set-cookie"];
-}).then((cookie) => {
-    signConfig.headers['cookie'] = `${OLD_COOKIE};${cookie[2].split(';')[0]};${cookie[3].split(';')[0]};${cookie[4].split(';')[0]}`
-    axios(signConfig).then((response) => {
-        console.log('data:', JSON.stringify(response.data));
-    }).catch(function (error) {
-        console.log(error);
-    });
-})
-.catch(function (error) {
-  console.log(error);
-});
+      // console.log('登录结果:', JSON.stringify(response.data));
+      return response.headers["set-cookie"];
+
+    }).then((cookie) => {
+
+      config.signConfig.headers['cookie'] = `${config.OLD_COOKIE};${cookie[2].split(';')[0]};${cookie[3].split(';')[0]};${cookie[4].split(';')[0]}`
+        axios(config.signConfig).then((response) => {
+            console.log('签到结果:', JSON.stringify(response.data));
+        }).catch(function (error) {
+            console.log(error);
+        });
+
+    })
+}
+
+const  startSchedule = async ()=>{
+  schedule.scheduleJob('0 0 5 * * *',()=>{
+      console.log('start job');
+      await real_job(config.old_account)
+      await real_job(config.new_account)
+  }); 
+}
+
+startSchedule();

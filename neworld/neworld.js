@@ -26,17 +26,17 @@ const real_job = (account) => {
 
       config.signConfig.headers['cookie'] = `${config.OLD_COOKIE};${cookie[2].split(';')[0]};${cookie[3].split(';')[0]};${cookie[4].split(';')[0]}`
         axios(config.signConfig).then((response) => {
-            console.log('签到结果:', JSON.stringify(response.data));
+            console.log('success!: ', JSON.stringify(response.data));
         }).catch(function (error) {
-            console.log(error);
+            console.log('error happened: ', JSON.stringify(error.data));
         });
 
     })
 }
 
-const  startSchedule = ()=>{
-  schedule.scheduleJob('0 0 5 * * *',()=>{
-      console.log('start job');
+const startSchedule = ()=>{
+  schedule.scheduleJob( {hour: 1} , fireDate => {
+      console.log('start job at' + fireDate + ' new Date():' + new Date());
       real_job(config.old_account)
       real_job(config.new_account)
   }); 
